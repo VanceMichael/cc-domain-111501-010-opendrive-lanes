@@ -1,0 +1,45 @@
+{
+  "entry": "/roadnet",
+  "documents": [
+    {
+      "id": "road-1",
+      "path": "road-1.xodr",
+      "format": "xml",
+      "file": "00.raw",
+      "task": "task-1",
+      "batch": "batch-local",
+      "serviceRoot": "/raw/",
+      "revision": 1
+    },
+    {
+      "id": "road-2",
+      "path": "road-2.xodr",
+      "format": "xml",
+      "file": "01.raw",
+      "task": "task-1",
+      "batch": "batch-local",
+      "serviceRoot": "/raw/",
+      "revision": 1
+    },
+    {
+      "id": "junction",
+      "path": "junction.xodr",
+      "format": "xml",
+      "file": "02.raw",
+      "task": "task-1",
+      "batch": "batch-local",
+      "serviceRoot": "/raw/",
+      "revision": 1
+    }
+  ],
+  "changedDocument": "road-2",
+  "replaceFrom": "<predecessor id=\"-1\"/>",
+  "replaceTo": "<predecessor id=\"-2\"/>",
+  "expectedIds": [
+    "r1:0:-1->r2:0:-1"
+  ],
+  "transmissionWindow": [
+    "2026-10-31T23:00:00Z",
+    "2026-11-01T01:00:00Z"
+  ]
+}
