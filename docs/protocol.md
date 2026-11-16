@@ -12,7 +12,9 @@
 
 本地测试可用 `source.state.round=2` 驱动一次修订：road-2把predecessor lane id改成-2，旧连接应不再被声明confirmed，并保留单侧矛盾来源。 `state.failDoc`、`state.missingDoc`可设为目录document.id，分别模拟临时失败与缺件，清空后恢复。采集端只能经HTTP观察，不允许读取source.state或fixture.expectedIds作为采集结果。fixture.expectedIds仅是公开验收对照。原始资料及解释版本需要可核对；失败不能使已确认内容凭空消失。把已取得的文件索引、源端修订、规范化记录及字段来源协同持久化；存储结构可扩展，不规定实现架构。
 
-完整性至少区分取得文件与解释关系两个层次；已隔离的未知字段不能被称作已解释。notes为现有人工诊断入口，可扩展结构，但信息应包含具体资料位置和未决原因。文件级原始证据由Repository.retain保留。legacy的人工预览入口继续可用；managed模式负责结构化接入。
+完整性至少区分取得文件与解释关系两个层次；已隔离的未知字段不能被称作已解释。managed 返回的 documentLevel 统计 total/available/missingOrFailed/degraded，relationLevel 统计 confirmed/unresolved/isolated；任一文档缺件或凭旧证据降级、任一连接未决或任一字段被隔离，complete 都为 false。notes为现有人工诊断入口，可扩展结构，但信息应包含具体资料位置（locations）和未决原因（reason）。文件级原始证据由Repository.retain保留。legacy的人工预览入口继续可用；managed模式负责结构化接入。
+
+managed 持久化在 Repository.state 上扩展 documents（文件索引与 revisions 版本链）、interpretations（按内容 digest 留存的规范化解释，含 documentId/path/revision）、relationships（当前已确认关系，同时发布到 records）、history（confirmed/revised/withdrawn/unresolved/resolved 追加式版本流水，撤回与修订均保留 previous 记录）以及 unresolvedKeys、isolatedKeys、documentNotes 去重索引。采集分 planned/fetched/interpreted/committed 四阶段并逐阶段写 managed 游标；在原件已留存而关系尚未提交时终止进程，重跑可由 evidence 与游标重建文件索引并续跑，不重复抓取、不丢失已确认内容。
 
 ## 验证矩阵
 

@@ -1,9 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { json, request } from './http.mjs';
 import { preview } from './preview.mjs';
+import { runManaged } from './managed.mjs';
 const fixture = JSON.parse(await readFile(new URL('../fixtures/scenarios.json', import.meta.url)));
 
-export async function collect({ base, repository }) {
+export async function collect({ base, repository, mode, hooks } = {}) {
+  if (mode === 'managed') {
+    return runManaged({ base, repository, hooks });
+  }
   const catalog = await json(base, fixture.entry);
   const first = catalog.documents[0];
   const response = await request(base, first.href);
